@@ -33,7 +33,7 @@ const productSchema = mongoose.Schema({
         type: String,
         required: true,
         enum: {
-            values: ["Kg", "Litre", "Pcs"],
+            values: ["kg", "litre", "pcs"],
             message: "unit value can't be {VALUE}, must be kg/litre/pcs"
         },
     },
@@ -61,17 +61,17 @@ const productSchema = mongoose.Schema({
             message: "Status can't be {VALUE}"
         },
     },
-    supplier: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Supplier"
-    },
-    categories: [{
-        name: {
-            type: String,
-            required: true,
-        },
-        _id: mongoose.Schema.Types.ObjectId
-    }],
+    // supplier: {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: "Supplier"
+    // },
+    // categories: [{
+    //     name: {
+    //         type: String,
+    //         required: true,
+    //     },
+    //     _id: mongoose.Schema.Types.ObjectId
+    // }],
     // createdAt: {
     //     type: Date,
     //     default: Date.now,
@@ -84,8 +84,32 @@ const productSchema = mongoose.Schema({
 }, { timestamps: true });
 
 
+// Schema -> Model -> Query 
+// Product Model 
+const Product = mongoose.model('Product', productSchema)
+
+
 app.get("/", (req, res) => {
     res.send("Inventory Management Server");
+});
+
+app.post('/api/v1/product', async (req, res, next) => {
+    try {
+        // const product = new Product(req.body); 
+        // const result = await product.save(); 
+        const result = await Product.create(req.body);
+        res.status(200).json({
+            status: 'success',
+            message: 'Data Inserted Successfully',
+            data: result,
+        });
+    } catch (error) {
+        res.status(400).json({
+            status: "Failed",
+            message: "Data is not inserted",
+            error: error.message,
+        });
+    }
 });
 
 module.exports = app;
