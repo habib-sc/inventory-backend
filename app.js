@@ -87,7 +87,7 @@ const productSchema = mongoose.Schema({
 // middlewear { pres / post } for prodcut schema 
 productSchema.pre('save', function (next) {
     console.log("Before Saving Data");
-    if(this.quantity == 0) {
+    if (this.quantity == 0) {
         this.status = 'out-of-stock'
     }
     next();
@@ -96,6 +96,11 @@ productSchema.pre('save', function (next) {
 //     console.log("After Saving Data");
 //     next()
 // });
+
+
+productSchema.methods.logger = function () {
+    console.log(`Data Saved for ${this.name}`);
+};
 
 
 // Schema -> Model -> Query 
@@ -112,6 +117,7 @@ app.post('/api/v1/product', async (req, res, next) => {
         // const product = new Product(req.body); 
         // const result = await product.save(); 
         const result = await Product.create(req.body);
+        result.logger();
         res.status(200).json({
             status: 'success',
             message: 'Data Inserted Successfully',
