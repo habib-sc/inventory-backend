@@ -132,4 +132,28 @@ app.post('/api/v1/product', async (req, res, next) => {
     }
 });
 
+app.get('/api/v1/product', async (req, res, next) => {
+    try {
+
+        // const products = await Product
+        //     .where("name").equals(/\w/)
+        //     .where("quantity").lt(100)
+        //     .limit(2);
+
+        const products = await Product.findById("639cd2cc75bf11dd09d4a096")
+
+        res.status(200).json({
+            status: 'success',
+            message: 'Data found successfully',
+            data: products,
+        });
+    } catch (error) {
+        res.status(400).json({
+            status: "Failed",
+            message: "Can't get the data",
+            error: error.message,
+        });
+    }
+});
+
 module.exports = app;
