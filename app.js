@@ -57,7 +57,7 @@ const productSchema = mongoose.Schema({
         type: String,
         required: true,
         enum: {
-            values: ["in-stock", "out-stock", "discontinued"],
+            values: ["in-stock", "out-of-stock", "discontinued"],
             message: "Status can't be {VALUE}"
         },
     },
@@ -82,6 +82,20 @@ const productSchema = mongoose.Schema({
     // }
 
 }, { timestamps: true });
+
+
+// middlewear { pres / post } for prodcut schema 
+productSchema.pre('save', function (next) {
+    console.log("Before Saving Data");
+    if(this.quantity == 0) {
+        this.status = 'out-of-stock'
+    }
+    next();
+});
+// productSchema.post('save', function (doc, next) {
+//     console.log("After Saving Data");
+//     next()
+// });
 
 
 // Schema -> Model -> Query 
