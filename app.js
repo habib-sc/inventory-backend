@@ -1,6 +1,5 @@
 const express = require('express');
 const cors = require('cors');
-const mongoose = require('mongoose');
 
 // Creating app 
 const app = express();
@@ -9,151 +8,15 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+// routes 
+const productRoute = require('./routes/product.route');
 
-// Schema design 
-const productSchema = mongoose.Schema({
-    name: {
-        type: String,
-        required: [true, "Please provide a name for this product"],
-        trim: true,  // extra space removing
-        unique: [true, "Name must be uniqe"],
-        minLength: [3, "Name must be at least 3 characters"],
-        maxLength: [100, "Name is too large"],
-    },
-    description: {
-        type: String,
-        required: true,
-    },
-    price: {
-        type: Number,
-        required: true,
-        min: [0, "Price can't be negetive"],
-    },
-    unit: {
-        type: String,
-        required: true,
-        enum: {
-            values: ["kg", "litre", "pcs"],
-            message: "unit value can't be {VALUE}, must be kg/litre/pcs"
-        },
-    },
-    quantity: {
-        type: Number,
-        required: true,
-        min: [0, "Quantity can't be negative"],
-        validate: {
-            validator: (value) => {
-                const isInteger = Number.isInteger(value); // validatinog quantity
-                if (isInteger) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-        },
-        message: "Quantity must be an integer"
-    },
-    status: {
-        type: String,
-        required: true,
-        enum: {
-            values: ["in-stock", "out-of-stock", "discontinued"],
-            message: "Status can't be {VALUE}"
-        },
-    },
-    // supplier: {
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: "Supplier"
-    // },
-    // categories: [{
-    //     name: {
-    //         type: String,
-    //         required: true,
-    //     },
-    //     _id: mongoose.Schema.Types.ObjectId
-    // }],
-    // createdAt: {
-    //     type: Date,
-    //     default: Date.now,
-    // },
-    // updatedAt: {
-    //     type: Date,
-    //     default: Date.now,
-    // }
-
-}, { timestamps: true });
-
-
-// middlewear { pres / post } for prodcut schema 
-productSchema.pre('save', function (next) {
-    console.log("Before Saving Data");
-    if (this.quantity == 0) {
-        this.status = 'out-of-stock'
-    }
-    next();
-});
-// productSchema.post('save', function (doc, next) {
-//     console.log("After Saving Data");
-//     next()
-// });
-
-
-productSchema.methods.logger = function () {
-    console.log(`Data Saved for ${this.name}`);
-};
-
-
-// Schema -> Model -> Query 
-// Product Model 
-const Product = mongoose.model('Product', productSchema)
 
 
 app.get("/", (req, res) => {
     res.send("Inventory Management Server");
 });
 
-app.post('/api/v1/product', async (req, res, next) => {
-    try {
-        // const product = new Product(req.body); 
-        // const result = await product.save(); 
-        const result = await Product.create(req.body);
-        result.logger();
-        res.status(200).json({
-            status: 'success',
-            message: 'Data Inserted Successfully',
-            data: result,
-        });
-    } catch (error) {
-        res.status(400).json({
-            status: "Failed",
-            message: "Data is not inserted",
-            error: error.message,
-        });
-    }
-});
-
-app.get('/api/v1/product', async (req, res, next) => {
-    try {
-
-        // const products = await Product
-        //     .where("name").equals(/\w/)
-        //     .where("quantity").lt(100)
-        //     .limit(2);
-
-        const products = await Product.findById("639cd2cc75bf11dd09d4a096")
-
-        res.status(200).json({
-            status: 'success',
-            message: 'Data found successfully',
-            data: products,
-        });
-    } catch (error) {
-        res.status(400).json({
-            status: "Failed",
-            message: "Can't get the data",
-            error: error.message,
-        });
-    }
-});
+app.use('/api/v1/product', productRoute);
 
 module.exports = app;
