@@ -1,5 +1,5 @@
 const Product = require("../models/Product");
-const { getProductsService, createProductService, updateProductService } = require("../services/product.services");
+const { getProductsService, createProductService, updateProductService, bulkUpdateProductsService } = require("../services/product.services");
 
 exports.getProducts = async (req, res, next) => {
     try {
@@ -51,6 +51,24 @@ exports.updateProduct = async (req, res, next) => {
             res.status(200).json({
                 status: 'success',
                 message: 'Data Updated Successfully',
+            });
+        }
+    } catch (error) {
+        res.status(400).json({
+            status: "Failed",
+            message: "Could't update the product",
+            error: error.message,
+        });
+    }
+};
+
+exports.bulkUpdateProducts = async (req, res, next) => {
+    try {
+        const result = await bulkUpdateProductsService(req.body);
+        if (result) {
+            res.status(200).json({
+                status: 'success',
+                message: 'Bulk Products Updated Successfully',
             });
         }
     } catch (error) {
