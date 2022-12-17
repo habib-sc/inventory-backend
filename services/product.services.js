@@ -11,3 +11,8 @@ exports.createProductService = async (data) => {
     const result = await Product.create(data);
     return result;
 };
+
+exports.updateProductService = async (productId, data) => {
+    const result = await Product.updateOne({ _id: productId }, { $set: data });
+    return result;
+};

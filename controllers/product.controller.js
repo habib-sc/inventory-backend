@@ -1,4 +1,5 @@
-const { getProductsService, createProductService } = require("../services/product.services");
+const Product = require("../models/Product");
+const { getProductsService, createProductService, updateProductService } = require("../services/product.services");
 
 exports.getProducts = async (req, res, next) => {
     try {
@@ -37,6 +38,25 @@ exports.createProduct = async (req, res, next) => {
         res.status(400).json({
             status: "Failed",
             message: "Data is not inserted",
+            error: error.message,
+        });
+    }
+};
+
+exports.updateProduct = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const result = await updateProductService(id, req.body);
+        if (result.modifiedCount) {
+            res.status(200).json({
+                status: 'success',
+                message: 'Data Updated Successfully',
+            });
+        }
+    } catch (error) {
+        res.status(400).json({
+            status: "Failed",
+            message: "Could't update the product",
             error: error.message,
         });
     }
