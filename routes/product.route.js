@@ -9,7 +9,11 @@ router.route('/')
 router.route('/bulk-update')
     .patch(productControler.bulkUpdateProducts)
 
+router.route('/bulk-delete')
+    .delete(productControler.bulkDeleteProducts)
+
 router.route('/:id')
     .patch(productControler.updateProduct)
+    .delete(productControler.deleteProduct)
 
 module.exports = router;
