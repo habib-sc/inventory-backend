@@ -9,7 +9,30 @@ exports.getProducts = async (req, res, next) => {
         //     .where("quantity").lt(100)
         //     .limit(2);
 
-        const products = await getProductsService();
+        const filters = { ...req.query };
+        const excludeFlieds = ['sort', 'page', 'limit'];
+        excludeFlieds.forEach(field => delete filters[field]);
+
+        const queries = {};
+
+        if (req.query.sort) {
+            const sortBy = req.query.sort.split(',').join(' ');
+            queries.sortBy = sortBy;
+        };
+
+        if (req.query.fields) {
+            const fields = req.query.fields.split(',').join(' ');
+            queries.fields = fields;
+        };
+
+        if (req.query.limit) {
+            const limit = req.query.limit;
+            queries.limit = limit;
+        };
+
+
+
+        const products = await getProductsService(filters, queries);
 
         res.status(200).json({
             status: 'success',
