@@ -31,6 +31,20 @@ exports.getProducts = async (req, res, next) => {
             queries.fields = fields;
         };
 
+        if (req.query.page) {
+            //50 page, Each page 10 product, 
+            // page 1 -> 1-10 
+            // page 2-> 11-20
+            // page 3-> 21-30 -> skip -> 1-20 = 2*10
+            // page 4-> 31-40
+            // page 5-> 41-50
+
+            const { page = 1, limit = 3 } = req.query;
+            const skip = (page - 1) * parseInt(limit);
+            queries.skip = skip;
+            queries.limit = limit;
+        };
+
         if (req.query.limit) {
             const limit = req.query.limit;
             queries.limit = limit;
