@@ -9,9 +9,15 @@ exports.getProducts = async (req, res, next) => {
         //     .where("quantity").lt(100)
         //     .limit(2);
 
-        const filters = { ...req.query };
+        let filters = { ...req.query };
         const excludeFlieds = ['sort', 'page', 'limit'];
         excludeFlieds.forEach(field => delete filters[field]);
+
+        //gt, lt, gte, lte
+        // Adding $ sign in query operator by replace method 
+        let filtersString = JSON.stringify(filters);
+        filtersString = filtersString.replace(/\b(gt|gte|lt|lte)\b/g, (match) => `$${match}`);
+        filters = JSON.parse(filtersString);
 
         const queries = {};
 
