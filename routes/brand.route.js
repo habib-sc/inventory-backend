@@ -8,4 +8,9 @@ router.route('/')
     .post(brandController.createBrand)
 
 
+router.route('/:id')
+    .get(brandController.getBrandById)
+    .patch(brandController.updateBrand)
+
+
 module.exports = router;
