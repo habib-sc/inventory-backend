@@ -12,7 +12,7 @@ const storeSchema = mongoose.Schema({
             values: ["dhaka", "chattogram", "rajshahi", "sylhet", "khulna", "barisal", "rangpur", "mymensingh"],
             message: "{VALUE} is not valid store name"
         },
-        description: String,
+        unique: true,
     },
     description: String,
     manager: {
@@ -23,9 +23,9 @@ const storeSchema = mongoose.Schema({
             ref: "User"
         },
     },
-    
+
 }, { timestamps: true });
 
-const Store = storeSchema.mongoose.model("Store", storeSchema);
+const Store = mongoose.model("Store", storeSchema);
 
 module.exports = Store;

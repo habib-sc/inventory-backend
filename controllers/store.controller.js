@@ -1,22 +1,21 @@
-const Category = require("../models/Category");
-const { getCategoriesService, createCategoryService } = require("../services/category.service");
+const { getStoresService, createStoreService } = require("../services/store.service");
 
-exports.getCategories = async (req, res, next) => {
+exports.getStores = async (req, res, next) => {
     try {
-        const categories = await getCategoriesService();
+        const stores = await getStoresService();
 
-        if (!categories) {
+        if (!stores) {
             res.status(400).json({
                 status: 'Failed',
-                message: 'Could not get catetgories',
+                message: 'Could not get stores',
             });
             return;
         }
 
         res.status(200).json({
             status: 'success',
-            message: 'Categories found successfully',
-            data: categories,
+            message: 'Stores found successfully',
+            data: stores,
         });
 
     } catch (error) {
@@ -28,28 +27,28 @@ exports.getCategories = async (req, res, next) => {
     }
 };
 
-exports.createCategory = async (req, res, next) => {
+exports.createStore = async (req, res, next) => {
     try {
-        const result = await createCategoryService(req.body);
+        const result = await createStoreService(req.body);
 
         if (!result._id) {
             res.status(400).json({
                 status: 'Failed',
-                message: 'Could not create the category',
+                message: 'Could not create the store',
             });
             return;
         }
 
         res.status(200).json({
             status: 'success',
-            message: 'Category Created successfully',
+            message: 'Store Created successfully',
             data: result,
         });
 
     } catch (error) {
         res.status(400).json({
             status: "Failed",
-            message: "Couldn't create the category",
+            message: "Couldn't create the store",
             error: error.message,
         });
     }
