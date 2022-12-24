@@ -83,3 +83,7 @@ const supplierSchema = mongoose.Schema({
     },
 
 }, { timestamps: true });
+
+const Supplier = mongoose.model("Supplier", supplierSchema);
+
+module.exports = Supplier;
