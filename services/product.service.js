@@ -28,9 +28,6 @@ exports.createProductService = async (data) => {
         { $push: { products: productId } }
     );
 
-    console.log(result);
-
-
     return product;
 };
 
