@@ -71,7 +71,6 @@ exports.getProducts = async (req, res, next) => {
 exports.createProduct = async (req, res, next) => {
     try {
         const result = await createProductService(req.body);
-        result.logger();
         res.status(200).json({
             status: 'success',
             message: 'Data Inserted Successfully',

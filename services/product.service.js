@@ -1,4 +1,5 @@
 const Product = require('../models/Product');
+const Brand = require('../models/Brand');
 
 exports.getProductsService = async (filters, queries) => {
     // const products = await Product.find({ status: query.status, page: query.page, limit: query.limit }); 
@@ -16,8 +17,21 @@ exports.getProductsService = async (filters, queries) => {
 exports.createProductService = async (data) => {
     // const product = new Product(req.body); 
     // const result = await product.save(); 
-    const result = await Product.create(data);
-    return result;
+    const product = await Product.create(data);
+
+    // getting productId and brand from created product 
+    const { _id: productId, brand } = product;
+
+    // Updating the brand with pushing productId 
+    const result = await Brand.updateOne(
+        { _id: brand.id },
+        { $push: { products: productId } }
+    );
+
+    console.log(result);
+
+
+    return product;
 };
 
 exports.updateProductService = async (productId, data) => {
