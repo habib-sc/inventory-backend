@@ -160,3 +160,21 @@ exports.bulkDeleteProducts = async (req, res, next) => {
         });
     }
 };
+
+
+exports.imageUpload = async (req, res, next) => {
+    try {
+        res.status(200).json({
+            status: 'success',
+            message: 'Image Uploaded Successfully',
+            result: req.file
+        });
+
+    } catch (error) {
+        res.status(400).json({
+            status: "Failed",
+            message: "Could't upload product image",
+            error: error.message,
+        });
+    }
+};
