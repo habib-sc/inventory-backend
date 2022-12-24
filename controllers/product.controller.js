@@ -1,5 +1,5 @@
 const Product = require("../models/Product");
-const { getProductsService, createProductService, updateProductService, bulkUpdateProductsService, deleteProductService, bulkDeleteProductsService } = require("../services/product.services");
+const { getProductsService, createProductService, updateProductService, bulkUpdateProductsService, deleteProductService, bulkDeleteProductsService } = require("../services/product.service");
 
 exports.getProducts = async (req, res, next) => {
     try {
