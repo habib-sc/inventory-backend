@@ -70,7 +70,6 @@ exports.updateBrand = async (req, res, next) => {
     const { id } = req.params;
     try {
         const result = await updateBrandService(id, req.body);
-        console.log(result);
         if (!result.modifiedCount) {
             res.status(400).json({
                 status: "failed",
