@@ -13,7 +13,6 @@ const stockSchema = mongoose.Schema({
         type: String,
         required: [true, "Please provide a name for this product"],
         trim: true,  // extra space removing
-        unique: [true, "Name must be uniqe"],
         lowercase: true,
         minLength: [3, "Name must be at least 3 characters"],
         maxLength: [100, "Name is too large"],
@@ -32,22 +31,7 @@ const stockSchema = mongoose.Schema({
     },
     imageURLs: [{
         type: String,
-        required: true,
-        validate: {
-            validator: (value) => {
-                if (!Array.isArray(value)) {
-                    return false;
-                }
-                let isValid = true;
-                value.forEach(url => {
-                    if (!validator.isURL(url)) {
-                        isValid = false;
-                    }
-                });
-                return isValid;
-            },
-            message: "Please provide valid image urls"
-        },
+        validate: [validator.isURL, "Please provide valid image urls"],
     }],
     price: {
         type: Number,
@@ -84,8 +68,8 @@ const stockSchema = mongoose.Schema({
                 values: ["dhaka", "chattogram", "rajshahi", "sylhet", "khulna", "barisal", "rangpur", "mymensingh"],
                 message: "{VALUE} is not valid store name"
             },
-            description: String,
         },
+        
         id: {
             type: ObjectId,
             required: true,
@@ -110,6 +94,11 @@ const stockSchema = mongoose.Schema({
             values: ["in-stock", "out-of-stock", "discontinued"],
             message: "Status can't be {VALUE}"
         },
+    },
+    sellCount: {
+        type: Number,
+        default: 0,
+        min: 0
     }
 
 }, { timestamps: true });
