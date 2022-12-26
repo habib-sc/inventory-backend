@@ -14,7 +14,7 @@ router.route('/')
 
 router.route('/:id')
     .get(stockController.getStockById)
-    .patch(stockController.updateStock)
-    .delete(stockController.deleteStock)
+// .patch(stockController.updateStock)
+// .delete(stockController.deleteStock)
 
 module.exports = router;

@@ -69,7 +69,7 @@ const stockSchema = mongoose.Schema({
                 message: "{VALUE} is not valid store name"
             },
         },
-        
+
         id: {
             type: ObjectId,
             required: true,

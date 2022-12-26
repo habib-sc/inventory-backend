@@ -1,4 +1,6 @@
+const mongoose = require('mongoose');
 const Stock = require('../models/Stock');
+const ObjectId = mongoose.Types.ObjectId;
 
 exports.getStocksService = async (filters, queries) => {
     // const Stocks = await Stock.find({ status: query.status, page: query.page, limit: query.limit }); 
@@ -8,16 +10,52 @@ exports.getStocksService = async (filters, queries) => {
         .select(queries.fields)
         .sort(queries.sortBy);
 
+    // const stocks = await Stock.aggregate([
+    //     { $match: {} },
+    //     {
+    //         $project: {
+    //             store: 1,
+    //             price: { $convert: { input: '$price', to: 'int' } },
+    //             quantity: 1,
+    //         }
+    //     },
+    //     { $group: { _id: '$store.name', totalProductPrice: { $sum: { $multiply: ['$price', '$quantity'] } } } }
+    // ]);
+
     const totalStocks = await Stock.countDocuments(filters);
     const pageCount = Math.ceil((totalStocks / queries.limit));
     return { totalStocks, pageCount, stocks };
 };
 
-exports.getStockByIdService = async (stockId) => {
-    const stock = await Stock.findOne({ _id: stockId })
-        .populate("store")
-        .populate("suppliedBy")
-        .populate("brand");
+exports.getStockByIdService = async (id) => {
+    const stock = await Stock.findOne({ _id: id })
+        .populate("store.id")
+        .populate("suppliedBy.id")
+        .populate("brand.id");
+
+    // const stock = await Stock.aggregate([
+    //     // stage 1 
+    //     { $match: { _id: ObjectId(id) } },
+    //     {
+    //         $project: {
+    //             name: 1,
+    //             category: 1,
+    //             quantity: 1,
+    //             price: 1,
+    //             productId: 1,
+    //             'brand.name': { $toLower: '$brand.name' }
+    //         }
+    //     },
+    //     {
+    //         $lookup: {
+    //             from: 'brands',
+    //             localField: 'brand.name',
+    //             foreignField: 'name',
+    //             as: 'brandDetails'
+    //         }
+    //     }
+    // ]);
+
     return stock;
 };
 
