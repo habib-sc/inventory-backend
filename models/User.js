@@ -16,15 +16,14 @@ const userSchema = mongoose.Schema({
         type: String,
         required: [true, "Password is required"],
         validate: {
-            validator: (value) => {
+            validator: (value) =>
                 validator.isStrongPassword(value, {
                     minLength: 6,
                     minLowercase: 3,
                     minNumber: 1,
                     minUppercase: 1,
                     minSymbles: 1,
-                })
-            },
+                }),
             message: "Password {VALUE} is not strong enough.",
         },
     },
@@ -60,6 +59,7 @@ const userSchema = mongoose.Schema({
         type: String,
         validate: [validator.isMobilePhone, "Please provide a valid contact number"],
     },
+    address: String,
     shippingAddress: String,
     imageURL: {
         type: String,
