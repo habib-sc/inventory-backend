@@ -101,3 +101,22 @@ exports.login = async (req, res, next) => {
         });
     }
 };
+
+exports.getMe = async (req, res, next) => {
+    try {
+        const user = await finUserByEmailService(req.user?.email);
+        const { password, ...userInfo } = user.toObject();
+        res.status(200).json({
+            status: 'success',
+            message: 'User Found',
+            data: userInfo,
+        });
+
+    } catch (error) {
+        res.status(400).json({
+            status: "Failed",
+            message: "Couldn't find user",
+            error: error.message,
+        });
+    }
+};
